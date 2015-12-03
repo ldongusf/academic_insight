@@ -5,50 +5,54 @@ import re
 
 
 data_path = '../data/'
-data_files = [
-    data_file for data_file in os.listdir(data_path) if '.csv' in data_file]
+data_files = [data_file 
+              for data_file in os.listdir(data_path) if '.csv' in data_file]
 
-
+schools = []
+frames = []
 for data_file in data_files:
-# data_file = data_files[1]
-    data_file
-
-    try:
-        school = re.search('School_Trend_((\D+))_T', data_file).group(1)
-    except AttributeError:
-        school = None
-        
-    print school
-
-    data = pd.read_csv(data_path + data_file, index_col = 0)
-    data_sm = data[['2005', '2015']]
-    data_sm = data_sm.rename(columns = lambda x: school + '_' + x)
-    
-    try:
-        final_data = pd.merge(final_data, data_sm, left_index=True, right_index=True)
-    except NameError as e:
-        print e
-        final_data = data_sm
+    print data_file
+    data = pd.read_csv(data_path + data_file).iloc[:,0:4]
+    data.columns = ['school', 'value', 'metric', 'year']
+    # data = data[~data['school'].isin(schools)]
+    # schools += list(set(list(data.school)))
+    # frames.append(data)
+    print data[(data['school'] == 'AIB College of Business') & 
+                (data['metric'] == '% of classes with 20-49 students') & 
+                (data['year'] == 2005)]
 
 
+result = pd.concat(frames)
 
-new_data = final_data.transpose()
-new_data.columns = pd.Series(new_data.columns).apply(lambda x: x.strip())
-new_data = new_data.loc[:, new_data.count() >= 40]
+result = result[result['year'].isin([2005, 2015])]
 
-# rank = pd.DataFrame(check['Overall rank'])
+# grouped = result.groupby('metric')
+# select_col_bool = grouped['value'].count() > grouped['value'].size() * 0.8
 
-new_data.loc[new_data.index.map(lambda x: '2005' in x), 'relative_rank'] = \
-    -(new_data.loc[new_data.index.map(
-            lambda x: '2005' in x), 'Overall rank'] - \
-        list(new_data.loc[new_data.index.map(
-            lambda x: '2005' in x and 'San-Francisco' in x), 'Overall rank']))
+# select_cols = [idx for idx in select_col_bool.index if select_col_bool[idx] == True]
 
-new_data.loc[new_data.index.map(lambda x: '2015' in x), 'relative_rank'] = \
-    -(new_data.loc[new_data.index.map(
-            lambda x: '2015' in x), 'Overall rank'] - \
-        list(new_data.loc[new_data.index.map(
-            lambda x: '2015' in x and 'San-Francisco' in x), 'Overall rank']))
+# select_result = result[result['metric'].isin(select_cols)]
 
-new_data.to_csv('../data/new_data.csv')
+
+# def compute_metrics(x):
+#     print x['year'] == 2015
+
+# grouped = select_result.groupby(['school', 'metric'])
+
+grouped = result.groupby(['school'])
+
+grouped['value'].size()
+# grouped.apply(compute_metrics)
+
+check = result[result['school'] == 'AIB College of Business']
+check2 = result[result['school'] == 'York College']
+
+a = check[check['metric'] == '% of classes with 20-49 students']
+
+# schools = result['school'].unique()
+# metric = result['metric'].unique()
+
+
+
+# new_data.to_csv('../data/new_data.csv')
 
