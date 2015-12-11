@@ -10,19 +10,32 @@ data_files = [data_file
 
 schools = []
 frames = []
+duplicated_in_same_file = []
 for data_file in data_files:
     print data_file
     data = pd.read_csv(data_path + data_file).iloc[:,0:4]
     data.columns = ['school', 'value', 'metric', 'year']
     # data = data[~data['school'].isin(schools)]
     # schools += list(set(list(data.school)))
-    # frames.append(data)
-    print data[(data['school'] == 'AIB College of Business') & 
-                (data['metric'] == '% of classes with 20-49 students') & 
-                (data['year'] == 2005)]
+    frames.append(data)
+    # grouped = data.groupby('school')
+    # size = grouped.size()
+    # print size[size != 4246]
+    # print type(size[size != 4246].index)
+    # duplicated_in_same_file += list(size[size != 4246].index)
+    # print data[(data['school'].isin(duplicated_in_same_file)) & 
+    #             (data['metric'] == 'Full-time enrollment') & 
+    #             (data['year'] == 2005)]
 
 
 result = pd.concat(frames)
+
+grouped = result.groupby('school')
+size = grouped.size()
+print size[size != 4246] / 4246
+
+
+
 
 result = result[result['year'].isin([2005, 2015])]
 

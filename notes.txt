@@ -1,0 +1,31 @@
+2 Bethel College in I-L.csv
+
+2 St. John's College in M-NewMexico.csv
+
+2 Concordia University in M-NewMexico.csv
+
+these are duplicates in the SAME file, which is a bigger concern to me
+
+
+below is a list of any duplicates (both across files and within files):
+
+Anderson University         2
+Aquinas College             2
+Augustana College           2
+Bethany College             2
+Bethel College              2
+Bethel University           2
+Columbia College            2
+Concordia College           2
+Concordia University        4
+Emmanuel College            2
+Marian University           2
+Robert Morris University    2
+St. John's College          2
+St. John's University       2
+St. Joseph's College        2
+Sterling College            2
+Union College               3
+University of St. Thomas    2
+Westminster College         3
+Wheaton College             2
